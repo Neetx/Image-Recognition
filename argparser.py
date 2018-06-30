@@ -6,13 +6,13 @@ from validators import (
 	epochValidator,
 	pathValidator,
 	workersValidator,
-	checkpointValidator
+	modelCheckpointValidator
 	)
 
 def argvcontrol():
 	parser = argparse.ArgumentParser(description='Image recognition tool implemented with PyTorch, CIFAR10 dataset.', epilog="Application: python image-recognizer.py --image")
 	parser.add_argument("-i", "--image", help="Image to recognize")
-	parser.add_argument("-c", "--checkpoint", help="Checkpoint file to load/save", default="model_100_76p")
+	parser.add_argument("-m", "--model", help="Model checkpoint file to load/save", default="model_100_76p")
 	parser.add_argument("-l", "--learning-rate", help="Learing Rate", default="0.0009")
 	parser.add_argument("-b", "--batch-size", help="Mini-Batch Size", default="4")
 	parser.add_argument("-e", "--epochs", help="Number of epoches for training the network", default="5")
@@ -25,24 +25,24 @@ def argvcontrol():
 
 	valid = True
 	if args.image and not imageValidator(args.image):
-		print ("[!] Invalid Image")
+		print ("[!] Invalid image")
 		valid = False
 	if not learningRateValidator(args.learning_rate):
-		print ("[!] Invalid Learing Rate")
+		print ("[!] Invalid learing rate")
 		valid = False
 	if not batchSizeValidator(args.batch_size):
 		print ("[!] Invalid batch-size")
 		valid = False
 	if not epochValidator(args.epochs):
-		print ("[!] Invalid Epoch")
+		print ("[!] Invalid epoch")
 		valid = False
 	if not pathValidator(args.path):
-		print ("[!] Invalid Path")
+		print ("[!] Invalid dataset path")
 		valid = False
 	if not workersValidator(args.workers):
-		print ("[!] Invalid Workers")
+		print ("[!] Invalid workers")
 		valid = False
-	if not checkpointValidator(args.checkpoint):
-		print ("[!] Invalid Checkpoint")
+	if not modelCheckpointValidator(args.model):
+		print ("[!] Invalid model checkpoint file")
 		valid = False
 	return args, valid

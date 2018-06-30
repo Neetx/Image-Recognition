@@ -26,5 +26,5 @@ def epochValidator(epoch):
 def workersValidator(workers):
 	return workers.isdigit()
 
-def checkpointValidator(checkpoint):
-	return os.path.exists(checkpoint)
+def modelCheckpointValidator(model):
+	return os.path.exists(model)
