@@ -15,14 +15,16 @@ def main():
 		args, check= argvcontrol()
 
 		if check:
-
 			if platform.system() == "Windows" or platform.system() == "win32":
 				args.model = os.path.abspath(".") + "\\" + args.model
 			else:
 				args.model = os.path.abspath(".") + "/" + args.model
 
 			classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
+
 			net = Net()
+			if args.cuda:
+				net.cuda()
 
 			if args.model:
 				if os.path.exists(args.model):
@@ -33,22 +35,22 @@ def main():
 			test_transform, train_transform = getTransformtions()
 
 			if args.training:
-				trainloader, testloader, criterion = CIFAR10Init(int(args.batch_size), int(args.workers))
+				trainloader, testloader, criterion = CIFAR10Init(args.cuda, int(args.batch_size), int(args.workers))
 				if trainloader and testloader:
 					frequency = int(len(trainloader)/4)
-					training(net, int(args.epochs), trainloader, frequency, criterion, float(args.learning_rate), int(args.batch_size), int(args.workers), args.model)
+					training(net, args.cuda, int(args.epochs), trainloader, frequency, criterion, float(args.learning_rate), int(args.batch_size), int(args.workers), args.model)
 				else:
 					exit()
 
 			elif args.image:
 				_class = recognition(net, args.image, test_transform, classes)
 				if _class:
-					print("Classification: %s\n" % (_class))
+					print("\nClassification: %s\n" % (_class))
 
 			else:
-				trainloader, testloader, criterion = CIFAR10Init(int(args.batch_size), int(args.workers))
+				trainloader, testloader, criterion = CIFAR10Init(args.cuda, int(args.batch_size), int(args.workers))
 				if trainloader and testloader:
-					validation(net, testloader, classes, args.model, int(args.batch_size))
+					validation(net, args.cuda, testloader, classes, args.model, int(args.batch_size))
 				else:
 					exit()
 		else:

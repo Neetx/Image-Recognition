@@ -1,5 +1,6 @@
 import os
 from PIL import Image
+import torch
 
 def checkImage(path):
 	try:
@@ -28,3 +29,6 @@ def workersValidator(workers):
 
 def modelCheckpointValidator(model):
 	return os.path.exists(model)
+
+def cudaValidator():
+	return torch.cuda.is_available()

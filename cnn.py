@@ -49,7 +49,7 @@ def getTransformtions():
 		])
 	return test_transform, train_transform
 
-def CIFAR10Init(batch_size=4, num_workers=2):
+def CIFAR10Init(cuda, batch_size=4, num_workers=2):
 	test_transform, train_transform = getTransformtions()
 	print("\n------> Preparing DATASET and DATALOADER")
 	try:
@@ -63,8 +63,10 @@ def CIFAR10Init(batch_size=4, num_workers=2):
 		print(e)
 		trainloader = None
 		testloader = None
-
-	criterion = nn.CrossEntropyLoss()
+	if cuda:
+		criterion = nn.CrossEntropyLoss().cuda()
+	else:
+		criterion = nn.CrossEntropyLoss()
 
 	return trainloader, testloader, criterion
 
@@ -83,7 +85,7 @@ def saveModel(net, modelPath):
 	except Exception as e:
 		print("[!] Error saving model")
 
-def training(net, epochs, trainloader, frequency, criterion, learning_rate, batch_size, workers, model):
+def training(net, cuda, epochs, trainloader, frequency, criterion, learning_rate, batch_size, workers, model):
 	try:
 		optimizer = optim.Adam(net.parameters(), lr=learning_rate,  betas=(0.9, 0.999), eps= 0.09)
 	except Exception as e:
@@ -102,7 +104,10 @@ def training(net, epochs, trainloader, frequency, criterion, learning_rate, batc
 			running_loss = 0.0
 			for i, data in enumerate(trainloader, 0):
 				inputs, labels = data
-				inputs, labels = Variable(inputs), Variable(labels)
+				if cuda:
+					inputs, labels = Variable(inputs).cuda(), Variable(labels).cuda(async=True)
+				else:
+					inputs, labels = Variable(inputs), Variable(labels)
 
 				optimizer.zero_grad()
 				outputs = net(inputs)
@@ -121,7 +126,7 @@ def training(net, epochs, trainloader, frequency, criterion, learning_rate, batc
 		exit()
 	saveModel(net, model)
 
-def validation(net, testloader, classes, model, batch_size=4):
+def validation(net, cuda, testloader, classes, model, batch_size=4):
 	correct = 0
 	total = 0
 	print("\n------> Starting total evaluation")
@@ -133,7 +138,13 @@ def validation(net, testloader, classes, model, batch_size=4):
 	try:
 		for data in testloader:
 			images, labels = data
-			outputs = net(Variable(images))
+			if cuda:
+				labels = Variable(labels).cuda()
+				images = Variable(images).cuda()
+			else:
+				labels = Variable(labels)
+				images = Variable(images)
+			outputs = net(images)
 			_, predicted = torch.max(outputs.data, 1)
 			total += labels.size(0)
 			correct += (predicted == labels).sum()
@@ -148,7 +159,13 @@ def validation(net, testloader, classes, model, batch_size=4):
 		class_total = list(0. for i in range(10))
 		for data in testloader:
 			images, labels = data
-			outputs = net(Variable(images))
+			if cuda:
+				labels = Variable(labels).cuda()
+				images = Variable(images).cuda()
+			else:
+				labels = Variable(labels)
+				images = Variable(images)
+			outputs = net(images)
 			_, predicted = torch.max(outputs.data, 1)
 			c = (predicted == labels).squeeze()
 			for i in range(batch_size):

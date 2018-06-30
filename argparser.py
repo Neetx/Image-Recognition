@@ -6,7 +6,8 @@ from validators import (
 	epochValidator,
 	pathValidator,
 	workersValidator,
-	modelCheckpointValidator
+	modelCheckpointValidator,
+	cudaValidator
 	)
 
 def argvcontrol():
@@ -21,6 +22,9 @@ def argvcontrol():
 	parser.add_argument('--train', dest='training', help="Set to train and validate the cnn", action='store_true')
 	parser.add_argument('--no-train', dest='training',help="Set to perform validation", action='store_false')
 	parser.set_defaults(training=False)
+	parser.add_argument('--cuda', dest='cuda', help="Set to use GPU", action='store_true')
+	parser.add_argument('--no-cuda', dest='cuda',help="Set to not use GPU", action='store_false')
+	parser.set_defaults(cuda=False)
 	args = parser.parse_args()
 
 	valid = True
@@ -45,4 +49,6 @@ def argvcontrol():
 	if not modelCheckpointValidator(args.model):
 		print ("[!] Invalid model checkpoint file")
 		valid = False
+	if args.cuda:
+		valid = cudaValidator()
 	return args, valid
