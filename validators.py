@@ -17,11 +17,14 @@ def pathValidator(path):
 def learningRateValidator(lrate):
 	return lrate.replace(".", "", 1).isdigit()
 
-def momentumValidator(momentum):
-	return momentum.replace(".", "", 1).isdigit()
-
 def batchSizeValidator(batchsize):
 	return batchsize.isdigit()
 
 def epochValidator(epoch):
 	return epoch.isdigit()
+
+def workersValidator(workers):
+	return workers.isdigit()
+
+def checkpointValidator(checkpoint):
+	return os.path.exists(checkpoint)
