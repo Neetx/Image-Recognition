@@ -49,14 +49,14 @@ def getTransformtions():
 		])
 	return test_transform, train_transform
 
-def CIFAR10Init(cuda, batch_size=4, num_workers=2):
+def CIFAR10Init(cuda, path, batch_size=4, num_workers=2):
 	test_transform, train_transform = getTransformtions()
 	print("\n------> Preparing DATASET and DATALOADER")
 	try:
-		trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=train_transform)
+		trainset = torchvision.datasets.CIFAR10(root=path, train=True, download=True, transform=train_transform)
 		trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
 
-		testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=test_transform)
+		testset = torchvision.datasets.CIFAR10(root=path , train=False, download=True, transform=test_transform)
 		testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
 	except Exception as e:
 		print("[!] Error in CIFAR10 dataset initialization")
@@ -72,6 +72,7 @@ def CIFAR10Init(cuda, batch_size=4, num_workers=2):
 
 def loadModel(net, modelPath):
 	print("\n------> Loading model")
+	print(modelPath)
 	try:
 		net.load_state_dict(torch.load(modelPath))
 	except Exception as e:
