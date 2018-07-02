@@ -95,7 +95,7 @@ def training(net, cuda, epochs, trainloader, frequency, criterion, learning_rate
 
 	print("\n------> Starting training")
 	print("------------------------------------------------------------------------")
-	print("Training Set length: %d\t\t Epochs: %d\t Output frequency: %d" % (epochs, len(trainloader), frequency))
+	print("Training Set length: %d\t Epochs: %d\t Output frequency: %d" % (len(trainloader), epochs, frequency))
 	print("Learning rate %.10f\t Batch size: %d\t Workers: %d" % (learning_rate, batch_size, workers))
 	print("Model: %s" % (model))
 	try:

@@ -46,7 +46,7 @@ def argvcontrol():
 	if not workersValidator(args.workers):
 		print ("[!] Invalid workers")
 		valid = False
-	if not modelCheckpointValidator(args.model):
+	if not modelCheckpointValidator(args.model) and not args.training:
 		print ("[!] Invalid model checkpoint file")
 		valid = False
 	if args.cuda:
