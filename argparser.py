@@ -11,7 +11,7 @@ from validators import (
 	)
 
 def argvcontrol():
-	parser = argparse.ArgumentParser(description='Image recognition tool implemented with PyTorch, CIFAR10 dataset.', epilog="Application: python image-recognizer.py --image")
+	parser = argparse.ArgumentParser(description='Image recognition tool implemented with PyTorch, CIFAR10 dataset.', epilog="Application: python image-recognizer.py --image PATH_TO_IMAGE")
 	parser.add_argument("-i", "--image", help="Image to recognize")
 	parser.add_argument("-m", "--model", help="Model checkpoint file to load/save", default="model_100_76p")
 	parser.add_argument("-l", "--learning-rate", help="Learing Rate", default="0.0009")
